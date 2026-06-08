@@ -39,17 +39,41 @@ activities = {
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
     },
-    "Art Club": {
-        "description": "Explore different art techniques and create your own masterpieces",
-        "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
-        "max_participants": 15,
-        "participants": ["ava@mergington.edu", "liam@mergington.edu"]
+    "Soccer Team": {
+        "description": "Team-based soccer practice and weekend matches",
+        "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+        "max_participants": 18,
+        "participants": ["nina@mergington.edu", "leo@mergington.edu"]
     },
-    "Music Club": {
-        "description": "Learn to play instruments and perform in school concerts",
-        "schedule": "Thursdays, 3:30 PM - 5:00 PM",
+    "Swimming Club": {
+        "description": "Swim training and water safety sessions",
+        "schedule": "Mondays and Wednesdays, 3:00 PM - 4:30 PM",
+        "max_participants": 16,
+        "participants": ["zara@mergington.edu", "mason@mergington.edu"]
+    },
+    "Art Club": {
+        "description": "Explore painting, drawing, and mixed media projects",
+        "schedule": "Wednesdays, 4:00 PM - 5:30 PM",
+        "max_participants": 15,
+        "participants": ["ava@mergington.edu", "ryan@mergington.edu"]
+    },
+    "Drama Club": {
+        "description": "Acting workshops and stage productions",
+        "schedule": "Thursdays, 3:45 PM - 5:15 PM",
         "max_participants": 20,
-        "participants": ["oliver@mergington.edu", "emma@mergington.edu"]
+        "participants": ["lila@mergington.edu", "jack@mergington.edu"]
+    },
+    "Debate Team": {
+        "description": "Practice public speaking and compete in debate tournaments",
+        "schedule": "Mondays, 4:00 PM - 5:30 PM",
+        "max_participants": 14,
+        "participants": ["sara@mergington.edu", "alex@mergington.edu"]
+    },
+    "Science Olympiad": {
+        "description": "Build science projects and prepare for academic competitions",
+        "schedule": "Fridays, 3:30 PM - 5:00 PM",
+        "max_participants": 18,
+        "participants": ["noah@mergington.edu", "mia@mergington.edu"]
     }
 }
 
@@ -81,3 +105,17 @@ def signup_for_activity(activity_name: str, email: str):
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
+
+
+@app.delete("/activities/{activity_name}/participants")
+def remove_participant(activity_name: str, email: str):
+    """Unregister a student from an activity"""
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    activity = activities[activity_name]
+    if email not in activity["participants"]:
+        raise HTTPException(status_code=404, detail="Participant not found")
+
+    activity["participants"].remove(email)
+    return {"message": f"Removed {email} from {activity_name}"}
